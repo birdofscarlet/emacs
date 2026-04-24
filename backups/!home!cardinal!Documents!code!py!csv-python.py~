@@ -1,0 +1,20 @@
+import csv
+
+scans = []
+with open("./inventory.csv", "r") as file:
+    inventory = csv.DictReader(file, delimiter=",")
+    for computer in inventory:
+        if (computer["Manufacturer"] == "Apple"):
+            scans.append({
+                "Name" : computer["Name"],
+                "IP Address" : computer["IP Address"]
+            })
+
+with open("./security-scan.csv", "w", newline-'') as file:
+    writer = csv.DictWriter(file, delimiter=",",
+                            fieldnames=["Name", "IP Address"])
+    writer.writeheader()
+    for scan in scans:
+        writer.writerow(scan)
+
+print (f"{len(scans)} Computers need scanning")

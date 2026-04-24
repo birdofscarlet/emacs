@@ -1,0 +1,11 @@
+$filename = "./nginx.conf"
+$search = "log"
+
+Write-Output "Searching $filename for `$search`"..."
+$lineNumber = 0
+foreach($line in Get-Content $filename {
+	    if ($line | Select-String $search -CaseSensitive:$false) {
+		Write-Output("(0)" -f $line);
+	    }
+}
+	

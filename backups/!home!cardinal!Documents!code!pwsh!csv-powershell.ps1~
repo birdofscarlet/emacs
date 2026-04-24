@@ -1,0 +1,5 @@
+$scans = @();
+$inventory = Import-Csv -Path "./inventory.csv"
+foreach($computer in $inventory) {
+
+}

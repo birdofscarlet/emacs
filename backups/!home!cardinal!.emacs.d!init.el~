@@ -2,15 +2,15 @@
 
 ;; disables startupscreen
 (setq inhibit-startup-screen t
-      ring-bell-function 'ignore ;; ohhh my goooddd SHUT THE FUCK UUUUUPPPP
-      use-short-answers t ;; y or n instead of yes or no
+      ring-bell-function 'ignore
+      use-short-answers t
       ;; smooth scrolling
-      scroll-step 1 ;; steppin on the beach do do do dooo
+      scroll-step 1
       scroll-conservatively 101
       display-line-numbers-type 'relative
       ;; prevents file system clutter
-      create-lockfiles nil ;; GEEEEET OUT OF MY HOOOOOOUUUUSE
-      backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))) ;; gay baby jail
+      create-lockfiles nil
+      backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
 ;; use spaces for indentation and clean whitespace
 (setq-default indent-tabs-mode nil
@@ -26,9 +26,9 @@
 
 
 ;; options to enable for better behavior
-(electric-pair-mode 1) ;; auto pair parenthesis
+(electric-pair-mode 1)
 (global-display-line-numbers-mode 1) ;; needed for relative line numbers
-(recentf-mode 1) ;; recent files
+(recentf-mode 1)
 (savehist-mode 1)
 (save-place-mode 1)
 (delete-selection-mode 1)
@@ -43,8 +43,15 @@
 ;; clean the UI
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(scroll-bar-mode -1)
-
-; ---------------------------------- ;
-;;        PACKAGE MANAGEMENT        ;;
-; ---------------------------------- ;
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
