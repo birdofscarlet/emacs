@@ -1,4 +1,9 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/cardinal/Documents/code/py/inventory.csv" . 9047)
- ("/home/cardinal/Documents/code/pwsh/nginx.conf" . 3304)
+(("/home/cardinal/Documents/code/pwsh/csv-powershell.ps1" . 390)
+ ("/home/cardinal/Documents/code/py/csv-python.py" . 638)
+ ("/home/cardinal/.emacs.d/init.el" . 2561)
+ ("/home/cardinal/" (dired-filename . "/home/cardinal/.bash_history"))
+ ("/home/cardinal/.bash_history" . 2)
+ ("/home/cardinal/Documents/code/py/json-python.py" . 442)
+ ("/home/cardinal/Documents/code/pwsh/text-powershell.ps1" . 44)
  ("/home/cardinal/.Xmodmap" . 2))
