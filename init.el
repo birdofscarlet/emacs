@@ -85,7 +85,7 @@
 ;; company
 (use-package company)
 (require 'company)
-(company-mode)
+(global-company-mode)
 
 (use-package company-box
   :hook (company-mode . company-box-mode))
@@ -94,6 +94,14 @@
 ;; powershell
 (use-package powershell)
 (require 'powershell)
+
+(require 'eglot)
+(dolist (hook '((python-mode . python-mode-hook)
+                (powershell-mode . powershell-mode-hook)
+                (scheme-mode . scheme-mode-hook) ;; guile/scheme
+                (c-mode . c-mode-hook)
+                (c++-mode . c++-mode-hook)))
+  (add-hook (cdr hook) #'eglot-ensure))
 
 ;; TODO: can we get rid of this somehow
 
