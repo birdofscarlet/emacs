@@ -1,5 +1,21 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/cardinal/.emacs.d/init.el" . 6232)
+(("/home/cardinal/.emacs.d/init.el" . 6943)
+ ("/home/cardinal/Documents/code/powershell/read-powershell.ps1" . 159)
+ ("/home/cardinal/.config/sway/config" . 374)
+ ("/home/cardinal/.config/"
+  (dired-filename . "/home/cardinal/.config/alacritty"))
+ ("/home/cardinal/.config/waybar/style.css" . 374)
+ ("/home/cardinal/.config/waybar/config" . 165)
+ ("/home/cardinal/.config/foot/foot.ini" . 515)
+ ("/home/cardinal/Documents/code/powershell/"
+  (dired-filename
+   . "/home/cardinal/Documents/code/powershell/access_log.json"))
+ ("/home/cardinal/Downloads/"
+  (dired-filename . "/home/cardinal/Downloads/malcolm x.docx"))
+ ("/home/cardinal/Documents/code/"
+  (dired-filename . "/home/cardinal/Documents"))
+ ("/home/cardinal/Documents/" (dired-filename . "/home/cardinal"))
+ ("/home/cardinal/" (dired-filename . "/home/cardinal/.emacs.d"))
  ("/home/cardinal/.emacs.d/"
   (dired-filename . "/home/cardinal/.emacs.d/init.el"))
  ("/home/cardinal/.emacs.d/.gitignore" . 84)

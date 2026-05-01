@@ -203,3 +203,73 @@
   (use-package mood-line
     :config
     (mood-line-mode)))
+
+(defun birdmacs--center-text (text)
+  "Center TEXT horizontally."
+  (let* ((lines (split-string text "\n"))
+         (width (window-width)))
+    (mapconcat
+     (lambda (line)
+       (let* ((len (string-width line))
+              (pad (max 0 (/ (- width len) 2))))
+         (concat (make-string pad ?\s) line)))
+     lines
+     "\n")))
+
+(defun birdmacs-dashboard ()
+  "Centered dashboard."
+  (interactive)
+  (let ((buf (get-buffer-create "*birdmacs*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+
+        (display-line-numbers-mode -1)
+        (hl-line-mode -1)
+
+        (let* ((content
+                (birdmacs--center-text
+"  \\
+   (o>
+\\_//)
+ \\_/)
+  _|_
+██████╗ ██╗██████╗ ██████╗ ███╗   ███╗ █████╗  ██████╗███████╗
+██╔══██╗██║██╔══██╗██╔══██╗████╗ ████║██╔══██╗██╔════╝██╔════╝
+██████╔╝██║██████╔╝██║  ██║██╔████╔██║███████║██║     ███████╗
+██╔══██╗██║██╔══██╗██║  ██║██║╚██╔╝██║██╔══██║██║     ╚════██║
+██████╔╝██║██║  ██║██████╔╝██║ ╚═╝ ██║██║  ██║╚██████╗███████║
+╚═════╝ ╚═╝╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝╚══════╝
+
+[f] find file
+[b] switch buffer
+[r] recent files
+[g] magit
+[q] quit
+"))
+               (lines (count-lines (point-min) (point-max)))
+               (padding (/ (- (window-height)
+                              (length (split-string content "\n")))
+                           2)))
+
+          ;; vertical centering
+          (when (> padding 0)
+            (insert (make-string padding ?\n)))
+
+          ;; insert content
+          (insert content))
+
+        ;; keymap
+        (use-local-map
+         (let ((map (make-sparse-keymap)))
+           (define-key map (kbd "f") #'find-file)
+           (define-key map (kbd "b") #'consult-buffer)
+           (define-key map (kbd "r") #'recentf-open-files)
+           (define-key map (kbd "g") #'magit-status)
+           (define-key map (kbd "q") #'quit-window)
+           map))
+
+        (goto-char (point-min))
+        (read-only-mode 1)))
+
+    buf))
