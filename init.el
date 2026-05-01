@@ -187,3 +187,5 @@
 (use-package subword
   :ensure nil
   :hook (prog-mode . subword-mode))
+
+;; test vc-mode
