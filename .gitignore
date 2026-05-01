@@ -1,5 +1,10 @@
 backups/
+elpa/
+eln-cache/
 auto-save-list/
-history
 recentf
+history
 places
+var/
+*.elc
+.cache/

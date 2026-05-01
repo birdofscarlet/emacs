@@ -1,5 +1,8 @@
 ;;; init.el --- BIRDMACS (refactored) -----------------------------
 
+(defvar birdmacs-jangling-keys t
+  "enable cosmetic extras like dashboard/modeline.")
+
 ;; ---------------------------------- ;;
 ;;         CORE CONFIGURATION         ;;
 ;; ---------------------------------- ;;
@@ -188,4 +191,15 @@
   :ensure nil
   :hook (prog-mode . subword-mode))
 
-;; test vc-mode
+(use-package magit
+  :bind ("C-x g" . magit-status))
+
+;; ---------------------------------- ;;
+;;           OOOH SHINY               ;;
+;; ---------------------------------- ;;
+
+(when birdmacs-jangling-keys
+  ;; modeline
+  (use-package mood-line
+    :config
+    (mood-line-mode)))

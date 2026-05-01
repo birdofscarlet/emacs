@@ -1,7 +1,8 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/cardinal/.emacs.d/init.el" . 4707)
+(("/home/cardinal/.emacs.d/init.el" . 6232)
  ("/home/cardinal/.emacs.d/"
   (dired-filename . "/home/cardinal/.emacs.d/init.el"))
+ ("/home/cardinal/.emacs.d/.gitignore" . 84)
  ("/home/cardinal/Documents/code/python/insert-python.py" . 1347)
  ("/home/cardinal/Documents/code/powershell/insert-powershell.ps1"
   . 1231)
