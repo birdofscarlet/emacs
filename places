@@ -1,7 +1,10 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/cardinal/Documents/code/powershell/insert-powershell.ps1"
+(("/home/cardinal/.emacs.d/init.el" . 4707)
+ ("/home/cardinal/.emacs.d/"
+  (dired-filename . "/home/cardinal/.emacs.d/init.el"))
+ ("/home/cardinal/Documents/code/python/insert-python.py" . 1347)
+ ("/home/cardinal/Documents/code/powershell/insert-powershell.ps1"
   . 1231)
- ("/home/cardinal/.emacs.d/init.el" . 3415)
  ("/home/cardinal/Documents/code/powershell/powershell-03.ps1" . 1804)
  ("/home/cardinal/Documents/code/python/python-03.py" . 1399)
  ("/home/cardinal/Documents/code/powershell/conditional-powershell.ps1"
