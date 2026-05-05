@@ -1,27 +1,30 @@
 * {
     font-family: monospace;
-    font-weight: bold;
+    font-size: 10px;
+    font-weight: normal;
 }
 
 window#waybar {
-    background: #1e1e1e;
-    border-bottom: 1px solid #3a3a3a;
+    background: #4A4A4A;
+    border: 1px solid lightgray;
     color: #ffffff;
 }
 
 #workspaces button {
+    padding: 0 8px;
+    margin: 0;
     background: transparent;
     color: #a8a8a8;
+    border: none;
 }
 
 #workspaces button.focused {
-    background: #00d3d0;
+    background: lightgray;
     color: #000000;
 }
 
-#clock,
-#cpu,
-#memory,
-#tray {
+#window,
+#clock {
     padding: 0 8px;
+    margin: 0;
 }
