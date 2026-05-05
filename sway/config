@@ -52,6 +52,7 @@ client.urgent           #ff8059 #ff8059 #ffffff #ff8059 #ff8059
 exec_always pkill waybar; waybar
 exec_always --no-startup-id eval $(gnome-keyring-daemon --start --components=secrets)
 exec_always pkill mako; mako
+
 ### ---------------------------------- ###
 ###             KEYBINDS               ###
 ### ---------------------------------- ###
