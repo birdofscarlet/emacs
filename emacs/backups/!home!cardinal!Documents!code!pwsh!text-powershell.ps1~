@@ -1,0 +1,16 @@
+$filename = "./nginx.conf"
+$search = "log"
+
+Write-Output "Searching $filename for `$search`"..."
+$lineNumber = 0
+foreach($line in Get-Content $filename) {
+#Get-Content -Path $Filename | ForEach-Object
+	#$line = $_
+	$lineNumber++;
+	if ($line | Select-String $search -CaseSensitive:$false) {
+		Write-Output("{0,4} : {1}" -f $lineNumber, $line)
+	}
+}
+
+("# [PS] {0} @ {1:yyyy-MM-dd HH:mm:ss}: Reviewed with Powershell" -f $env:Username, (Get-Date)) | `
+	Out-File -Append -FilePath $filename -Encoding utf8

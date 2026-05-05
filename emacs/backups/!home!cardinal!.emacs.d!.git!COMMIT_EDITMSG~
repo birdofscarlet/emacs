@@ -1,0 +1,108 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   .gitignore
+#	modified:   elpa/archives/melpa/archive-contents
+#	modified:   init.el
+#	modified:   places
+#	modified:   recentf
+#
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+diff --git a/.gitignore b/.gitignore
+index 21478d0..4381181 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1,10 @@
+ backups/
++elpa/
++eln-cache/
+ auto-save-list/
+-history
+ recentf
+-places
+\ No newline at end of file
++history
++places
++var/
++*.elc
++.cache/
+\ No newline at end of file
+diff --git a/elpa/archives/melpa/archive-contents b/elpa/archives/melpa/archive-contents
+index 2aa1c89..ab9da7d 100644
+--- a/elpa/archives/melpa/archive-contents
++++ b/elpa/archives/melpa/archive-contents
+@@ -4042,7 +4042,7 @@
+  (org-brain . [(20230217 1908) ((emacs (25 1)) (org (9 2))) "Org-mode concept mapping" tar ((:url . "https://github.com/Kungsgeten/org-brain") (:commit . "2bad7732aae1a3051e2a14de2e30f970bbe43c25") (:revdesc . "2bad7732aae1") (:keywords "outlines" "hypermedia") (:authors ("Erik Sjöstrand" . "sjostrand.erik@gmail.com")) (:maintainers ("Erik Sjöstrand" . "sjostrand.erik@gmail.com")) (:maintainer "Erik Sjöstrand" . "sjostrand.erik@gmail.com"))])
+  (org-bulletproof . [(20230615 640) ((emacs (27 1))) "Automatic plain list bullet cycling" tar ((:url . "https://github.com/pondersson/org-bulletproof") (:commit . "8ae80a53f8034914f502a8655f420c55078e02e1") (:revdesc . "8ae80a53f803") (:keywords "outlines" "convenience") (:authors ("Pontus Andersson" . "pondersson@gmail.com")) (:maintainers ("Pontus Andersson" . "pondersson@gmail.com")) (:maintainer "Pontus Andersson" . "pondersson@gmail.com"))])
+  (org-bullets . [(20200317 1740) nil "Show bullets in org-mode as UTF-8 characters" tar ((:url . "https://github.com/integral-dw/org-bullets") (:commit . "9ec0dbd30be7c6310804141ee952ac8c5f753557") (:revdesc . "9ec0dbd30be7") (:maintainers ("D. Williams" . "d.williams@posteo.net")) (:maintainer "D. Williams" . "d.williams@posteo.net"))])
+- (org-caldav . [(20260222 437) ((emacs (26 3)) (org (9 1))) "Sync org files with external calendar through CalDAV" tar ((:url . "https://github.com/dengste/org-caldav/") (:commit . "2afbeca982d6b0987b1566eba5a4efa871546955") (:revdesc . "2afbeca982d6") (:keywords "calendar" "caldav") (:authors ("David Engster" . "deng@randomsample.de")) (:maintainers ("David Engster" . "deng@randomsample.de")) (:maintainer "David Engster" . "deng@randomsample.de"))])
++ (org-caldav . [(20260501 8) ((emacs (26 3)) (org (9 1))) "Sync org files with external calendar through CalDAV" tar ((:url . "https://github.com/dengste/org-caldav/") (:commit . "14f541814df597395fddb44b6e4bdb7c20f72cbe") (:revdesc . "14f541814df5") (:keywords "calendar" "caldav") (:authors ("David Engster" . "deng@randomsample.de")) (:maintainers ("David Engster" . "deng@randomsample.de")) (:maintainer "David Engster" . "deng@randomsample.de"))])
+  (org-calibre-notes . [(20221202 1657) ((emacs (27 1))) "Extract highlights and notes from Calibre EPUB reader" tar ((:url . "https://github.com/bpanthi977/org-calibre-notes") (:commit . "3120797ecbcb58827b91e3610e65579593d9a402") (:revdesc . "3120797ecbcb") (:authors ("Bibek Panthi" . "bpanthi977@gmail.com")) (:maintainers ("Bibek Panthi" . "bpanthi977@gmail.com")) (:maintainer "Bibek Panthi" . "bpanthi977@gmail.com"))])
+  (org-capture-pop-frame . [(20230516 236) ((emacs (24 4))) "Run org-capture in a new pop frame" tar ((:url . "https://github.com/tumashu/org-capture-pop-frame.git") (:commit . "d88b75cc02fc53716701051dbdd906db0515de8c") (:revdesc . "d88b75cc02fc") (:authors ("Feng Shu" . "tumashu@163.com")) (:maintainers ("Feng Shu" . "tumashu@163.com")) (:maintainer "Feng Shu" . "tumashu@163.com"))])
+  (org-category-capture . [(20260127 711) ((org (9 0 0)) (emacs (24))) "Contextualy capture of org-mode TODOs" tar ((:url . "https://github.com/IvanMalison/org-project-capture") (:commit . "0521cbb6bb371cbfd9b7b5688b82ac119af1bf30") (:revdesc . "0521cbb6bb37") (:keywords "org-mode" "todo" "tools" "outlines") (:authors ("Ivan Malison" . "IvanMalison@gmail.com")) (:maintainers ("Ivan Malison" . "IvanMalison@gmail.com")) (:maintainer "Ivan Malison" . "IvanMalison@gmail.com"))])
+diff --git a/init.el b/init.el
+index 8727ace..ce4e52f 100644
+--- a/init.el
++++ b/init.el
+@@ -1,5 +1,8 @@
+ ;;; init.el --- BIRDMACS (refactored) -----------------------------
+ 
++(defvar birdmacs-jangling-keys t
++  "enable cosmetic extras like dashboard/modeline.")
++
+ ;; ---------------------------------- ;;
+ ;;         CORE CONFIGURATION         ;;
+ ;; ---------------------------------- ;;
+@@ -188,4 +191,15 @@
+   :ensure nil
+   :hook (prog-mode . subword-mode))
+ 
+-;; test vc-mode
++(use-package magit
++  :bind ("C-x g" . magit-status))
++
++;; ---------------------------------- ;;
++;;           OOOH SHINY               ;;
++;; ---------------------------------- ;;
++
++(when birdmacs-jangling-keys
++  ;; modeline
++  (use-package mood-line
++    :config
++    (mood-line-mode)))
+diff --git a/places b/places
+index abc7410..b74b294 100644
+--- a/places
++++ b/places
+@@ -1,7 +1,8 @@
+ ;;; -*- coding: utf-8; mode: lisp-data -*-
+-(("/home/cardinal/.emacs.d/init.el" . 4707)
++(("/home/cardinal/.emacs.d/init.el" . 6232)
+  ("/home/cardinal/.emacs.d/"
+   (dired-filename . "/home/cardinal/.emacs.d/init.el"))
++ ("/home/cardinal/.emacs.d/.gitignore" . 84)
+  ("/home/cardinal/Documents/code/python/insert-python.py" . 1347)
+  ("/home/cardinal/Documents/code/powershell/insert-powershell.ps1"
+   . 1231)
+diff --git a/recentf b/recentf
+index e6e2631..65cec5c 100644
+--- a/recentf
++++ b/recentf
+@@ -1,8 +1,9 @@
+-;;; Automatically generated by ‘recentf’ on Thu Apr 30 21:16:17 2026.
++;;; Automatically generated by ‘recentf’ on Thu Apr 30 23:52:56 2026.
+ 
+ (setq recentf-list
+       '(
+         "~/.emacs.d/init.el"
++        "~/.emacs.d/.gitignore"
+         "~/Documents/code/python/insert-python.py"
+         "~/Documents/code/powershell/insert-powershell.ps1"
+         "~/Documents/code/python/python-03.py"

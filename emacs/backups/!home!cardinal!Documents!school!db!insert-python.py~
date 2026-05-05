@@ -1,0 +1,40 @@
+import datetime
+import sqlite3
+
+# Boilerplate code for Date/time conversion to handle deprecation warnings
+def adapt_date_iso(val):
+    """Adapt datetime.date to ISO 8601 date."""
+    return val.isoformat()
+sqlite3.register_adapter(datetime.datetime, adapt_date_iso)
+
+# Connect to the database
+conn = sqlite3.connect('inventory.db')
+cursor = conn.cursor()
+
+# Insert data into inventory
+# Execute a query
+# Method #1
+query = "INSERT INTO inventory (name, type, manufacturer, purchase_date, status) \
+VALUES ('Laptop002', 'Laptop', 'Acer', '2024-07-11', 'inactive')"
+cursor.execute(query)
+
+# Method 2
+# While the following works, it is a common security vulnerability known as SQL injection
+name = "Server002"
+type = "Server"
+manufacturer = "Cisco"
+purchaseData = datetime.datetime.strptime("2023-08-13", '%Y-%m-%d')
+status = "active"
+query = f"INSERT INTO inventory (name, type, manufacturer, purchase_date, status) \
+VALUES ('{name}', '{type}', '{manufacturer}', '{purchaseDate}', '{status}')"
+cursor.execute(query)
+
+# Method 3
+# The "Correct Way"
+query = "INSERT INTO inventory (name, type, manufacturer, purchase_date, status) VALUES (?, ?, ?, ?, ?)"
+parameters = ('Desktop002', 'Desktop', 'Asus', datetime.datetime.strptime('2021-09-15', '%Y-%m-%d'), 'active')
+cursor.execute(query, parameters)
+
+# Commit and close
+conn.commit()
+conn.close()

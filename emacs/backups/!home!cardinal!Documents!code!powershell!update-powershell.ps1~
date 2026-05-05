@@ -1,0 +1,12 @@
+Import-Module PSSQLite
+
+$dataSource = "./inventory.db"
+
+$query = "UPDATE inventory SET status = 'inactive'
+WHERE type = 'Desktop'
+AND purchase_date <= @purchase_date"
+
+Invoke-SqliteQuery -Query $query -DataSource $dataSource `
+  -SqlParameters @{
+      purchase_date = [DateTime]'2023-12-31'
+  }

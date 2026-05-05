@@ -1,0 +1,6 @@
+Import-Module PSSQLite
+
+$dataSource = "./inventory.db"
+
+$query = "SELECT * FROM inventory"
+$result = Invoke-SqliteQuery -Query $query -DataSource $dataSource

@@ -1,0 +1,13 @@
+from datetime import datetime
+import os
+
+filename = "./nginx.conf"
+search = "log"
+
+print(f"Searching $filename for \"{search}\"...")
+lineNumber = 0
+with open(filename, "r+") as file:
+    for line in file:
+        lineNumber += 1
+        if (search in line):
+            print(f"{lineNumber:<4} : {line}", end="")
