@@ -16,15 +16,15 @@
       scroll-step 1
       scroll-conservatively 101
       display-line-numbers-type 'relative
-      create-lockfiles nil)
+      create-lockfiles nil
+      read-process-output-max (* 1024 1024)
+      gc-cons-threshold (* 100 1024 1024))
 
 ;; backups
 (let ((backup-dir (expand-file-name "backups/" user-emacs-directory)))
   (unless (file-directory-p backup-dir)
     (make-directory backup-dir t))
-  (setq backup-directory-alist `(("." . ,backup-dir))))
-
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
+  (setq backup-directory-alist `((".*" . ,backup-dir))))
 
 ;; UI cleanup
 (tool-bar-mode -1)
@@ -52,10 +52,26 @@
 (save-place-mode 1)
 (delete-selection-mode 1)
 
-;; keybinds
-(global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 (setq-default indent-line-function #'indent-for-tab-command)
 (setq tab-always-indent 'complete)
+
+;; keybinds
+(global-set-key (kbd "<escape>") #'keyboard-escape-quit)
+(global-set-key (kbd "M-/") #'completion-at-point)
+(global-set-key (kbd "C-c n") #'flymake-goto-next-error)
+(global-set-key (kbd "C-c p") #'flymake-goto-prev-error)
+;; hook
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook #'eglot-format-buffer nil t)))
+
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+
+(dolist (mode '(vterm-mode-hook
+                term-mode-hook
+                eshell-mode-hook
+                shell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
 ;; ---------------------------------- ;;
 ;;        PACKAGE MANAGEMENT          ;;
@@ -145,22 +161,37 @@
 (use-package corfu
   :init
   (global-corfu-mode)
+
   :custom
   (corfu-auto t)
-  (corfu-auto-delay 0.12)
+  (corfu-auto-delay 0.08)        ;; snappier
   (corfu-auto-prefix 1)
   (corfu-cycle t)
   (corfu-separator ?\s)
+
+  ;; popup docs
+  (corfu-popupinfo-delay 0.2)
+
+  ;; nicer behavior
+  (corfu-preselect 'prompt)      ;; don't auto-select first candidate
+
   :config
+  ;; disable in minibuffer
   (add-hook 'minibuffer-setup-hook
             (lambda () (corfu-mode -1)))
-  (corfu-popupinfo-mode))
+
+  ;; enable docs
+  (corfu-popupinfo-mode)
+
+  (define-key corfu-map (kbd "M-SPC") #'corfu-insert-separator))
 
 ;; cape - extra completion sources
 (use-package cape
   :init
-  (add-hook 'completion-at-point-functions #'cape-file t)
-  (add-hook 'text-mode-hook
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (add-hook 'completion-at-point-functions #'cape-file -10 t)))
+(add-hook 'text-mode-hook
             (lambda ()
               (add-hook 'completion-at-point-functions #'cape-dabbrev nil t))))
 
@@ -168,7 +199,12 @@
 (use-package powershell
   :mode ("\\.ps1\\'" . powershell-mode))
 
-;; eglot
+(use-package python
+  :ensure nil
+  :hook (python-mode . (lambda ()
+                         (setq-local tab-width 4)
+                         (setq-local indent-tabs-mode nil))))
+
 (use-package eglot
   :hook ((python-mode
           powershell-mode
@@ -177,7 +213,15 @@
           c++-mode) . eglot-ensure)
   :custom
   (eglot-autoshutdown t)
-  (eglot-events-buffer-size 0))
+  (eglot-events-buffer-size 0)
+  :config
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("pyright-langserver" "--stdio"))))
+
+;; inline diagnostics
+(use-package flymake
+  :ensure nil
+  :hook (prog-mode . flymake-mode))
 
 ;; shiny icons
 (use-package kind-icon
@@ -195,6 +239,69 @@
 
 (use-package magit
   :bind ("C-x g" . magit-status))
+
+(use-package vterm
+  :commands vterm
+  :config
+  ;; better scrolling
+  (setq vterm-scrollback 5000)
+
+  ;; don't ask on exit
+  (setq vterm-kill-buffer-on-exit t)
+
+  ;; fix common key annoyances
+  (define-key vterm-mode-map (kbd "C-c C-j") #'vterm-copy-mode)
+  (define-key vterm-copy-mode-map (kbd "C-c C-k") #'vterm-copy-mode))
+
+;; quick open
+(global-set-key (kbd "C-c t") #'vterm)
+
+;; toggle like a dropdown terminal
+(defun birdmacs/toggle-vterm ()
+  (interactive)
+  (if (get-buffer "*vterm*")
+      (if (eq (current-buffer) (get-buffer "*vterm*"))
+          (bury-buffer)
+        (switch-to-buffer "*vterm*"))
+    (vterm)))
+
+(global-set-key (kbd "C-`") #'birdmacs/toggle-vterm)
+
+(defun birdmacs/project-root ()
+  (when-let ((proj (project-current)))
+    (project-root proj)))
+
+(defun birdmacs/vterm-project ()
+  (interactive)
+  (let ((default-directory
+          (or (birdmacs/project-root)
+              default-directory)))
+    (vterm)))
+
+(global-set-key (kbd "C-c T") #'birdmacs/vterm-project)
+
+(defun birdmacs/vterm-run (cmd)
+  (let ((buffer (get-buffer "*vterm*")))
+    (unless buffer
+      (setq buffer (vterm)))
+    (with-current-buffer buffer
+      (goto-char (point-max))
+      (vterm-send-string cmd)
+      (vterm-send-return))))
+
+(defun birdmacs/run-python-file ()
+  (interactive)
+  (birdmacs/vterm-run
+   (format "python %s"
+           (shell-quote-argument (buffer-file-name)))))
+
+(defun birdmacs/compile-project ()
+  (interactive)
+  (birdmacs/vterm-run "make"))
+
+(global-set-key (kbd "C-c r") #'birdmacs/run-python-file)
+(global-set-key (kbd "C-c m") #'birdmacs/compile-project)
+
 
 ;; ---------------------------------- ;;
 ;;           OOOH SHINY               ;;
@@ -214,14 +321,16 @@
           dashboard-items '((recents . 5)))
     :config
     (dashboard-setup-startup-hook))
-  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+  (setq initial-buffer-choice (lambda () "*dashboard*")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(cape consult corfu dashboard elcord kind-icon magit marginalia
+	  mood-line orderless powershell vertico vterm)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
