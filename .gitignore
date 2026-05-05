@@ -6,3 +6,4 @@ emacs/transient/
 emacs/*history
 emacs/*recentf
 emacs/*places
+emacs/backups/
