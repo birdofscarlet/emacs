@@ -1,4 +1,4 @@
-;;; init.el --- BIRDMACS (refactored) -----------------------------
+;;; init.el --- BIRDMACS (clean + lint-safe) -*- lexical-binding: t; -*-
 
 (defvar birdmacs-jangling-keys t
   "enable cosmetic extras like dashboard/modeline.")
@@ -18,7 +18,8 @@
       display-line-numbers-type 'relative
       create-lockfiles nil
       read-process-output-max (* 1024 1024)
-      gc-cons-threshold (* 100 1024 1024))
+      gc-cons-threshold (* 100 1024 1024)
+      byte-compile-warnings '(not free-vars unresolved))
 
 ;; backups
 (let ((backup-dir (expand-file-name "backups/" user-emacs-directory)))
@@ -58,8 +59,7 @@
 ;; keybinds
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 (global-set-key (kbd "M-/") #'completion-at-point)
-(global-set-key (kbd "C-c n") #'flymake-goto-next-error)
-(global-set-key (kbd "C-c p") #'flymake-goto-prev-error)
+
 ;; hook
 (add-hook 'prog-mode-hook
           (lambda ()
@@ -223,6 +223,10 @@
   :ensure nil
   :hook (prog-mode . flymake-mode))
 
+(with-eval-after-load 'flymake
+  (global-set-key (kbd "C-c n") #'flymake-goto-next-error)
+  (global-set-key (kbd "C-c p") #'flymake-goto-prev-error))
+
 ;; shiny icons
 (use-package kind-icon
   :after corfu
@@ -308,10 +312,8 @@
 ;; ---------------------------------- ;;
 
 (when birdmacs-jangling-keys
-  ;; modeline
   (use-package mood-line
-    :config
-    (mood-line-mode))
+    :config (mood-line-mode))
 
   (use-package dashboard
     :init
@@ -321,7 +323,11 @@
           dashboard-items '((recents . 5)))
     :config
     (dashboard-setup-startup-hook))
-  (setq initial-buffer-choice (lambda () "*dashboard*")))
+
+  (with-eval-after-load 'dashboard
+    (setq initial-buffer-choice
+          (lambda ()
+            (get-buffer "*dashboard*")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
